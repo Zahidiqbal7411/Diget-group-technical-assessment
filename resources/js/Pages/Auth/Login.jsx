@@ -15,7 +15,6 @@ export default function Login({ status, canResetPassword }) {
 
     const submit = (e) => {
         e.preventDefault();
-
         post(route('login'), {
             onFinish: () => reset('password'),
         });
@@ -23,18 +22,22 @@ export default function Login({ status, canResetPassword }) {
 
     return (
         <GuestLayout>
-            <Head title="Log in" />
+            <Head title="Sign In - Diget Group" />
+
+            <div className="mb-6 text-center">
+                <h2 className="text-2xl font-bold text-gray-800">Welcome Back</h2>
+                <p className="text-sm text-gray-500">Sign in to your account</p>
+            </div>
 
             {status && (
-                <div className="mb-4 text-sm font-medium text-green-600">
+                <div className="mb-4 rounded-lg bg-green-50 p-3 text-sm font-medium text-green-600">
                     {status}
                 </div>
             )}
 
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
-
+                    <InputLabel htmlFor="email" value="Email Address" />
                     <TextInput
                         id="email"
                         type="email"
@@ -45,13 +48,11 @@ export default function Login({ status, canResetPassword }) {
                         isFocused={true}
                         onChange={(e) => setData('email', e.target.value)}
                     />
-
                     <InputError message={errors.email} className="mt-2" />
                 </div>
 
                 <div className="mt-4">
                     <InputLabel htmlFor="password" value="Password" />
-
                     <TextInput
                         id="password"
                         type="password"
@@ -61,38 +62,43 @@ export default function Login({ status, canResetPassword }) {
                         autoComplete="current-password"
                         onChange={(e) => setData('password', e.target.value)}
                     />
-
                     <InputError message={errors.password} className="mt-2" />
                 </div>
 
-                <div className="mt-4 block">
+                <div className="mt-4 flex items-center justify-between">
                     <label className="flex items-center">
                         <Checkbox
                             name="remember"
                             checked={data.remember}
-                            onChange={(e) =>
-                                setData('remember', e.target.checked)
-                            }
+                            onChange={(e) => setData('remember', e.target.checked)}
                         />
-                        <span className="ms-2 text-sm text-gray-600">
-                            Remember me
-                        </span>
+                        <span className="ms-2 text-sm text-gray-600">Remember me</span>
                     </label>
-                </div>
 
-                <div className="mt-4 flex items-center justify-end">
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
-                            className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className="text-sm text-indigo-600 hover:text-indigo-800"
                         >
-                            Forgot your password?
+                            Forgot password?
                         </Link>
                     )}
+                </div>
 
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
+                <div className="mt-6">
+                    <PrimaryButton className="w-full justify-center py-3" disabled={processing}>
+                        Sign In
                     </PrimaryButton>
+                </div>
+
+                <div className="mt-6 text-center">
+                    <span className="text-sm text-gray-500">Don't have an account? </span>
+                    <Link
+                        href={route('register')}
+                        className="text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                    >
+                        Create Account
+                    </Link>
                 </div>
             </form>
         </GuestLayout>
