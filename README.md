@@ -1,0 +1,1 @@
+# Diget-group-technical-assessment
