@@ -10,127 +10,87 @@ export default function SectionTree({ sections, bookId, canManage, onSelectSecti
                     section={section}
                     bookId={bookId}
                     canManage={canManage}
-                    onSelectSection={onSelectSection}
-                    selectedSectionId={selectedSectionId}
-                    depth={0}
+                    onSelect={onSelectSection}
+                    selectedId={selectedSectionId}
+                    level={0}
                 />
             ))}
         </div>
     );
 }
 
-function SectionItem({ section, bookId, canManage, onSelectSection, selectedSectionId, depth }) {
-    const [isExpanded, setIsExpanded] = useState(true);
-    const [isAddingChild, setIsAddingChild] = useState(false);
+function SectionItem({ section, bookId, canManage, onSelect, selectedId, level }) {
+    const [expanded, setExpanded] = useState(true);
+    const [showInput, setShowInput] = useState(false);
     const [newTitle, setNewTitle] = useState('');
+    const hasChildren = section.all_subsections?.length > 0;
+    const isSelected = selectedId === section.id;
 
-    const hasChildren = section.all_subsections && section.all_subsections.length > 0;
-    const isSelected = selectedSectionId === section.id;
-    const paddingLeft = depth * 16;
-
-    const handleAddChild = (e) => {
+    const handleAddSubsection = (e) => {
         e.preventDefault();
         if (!newTitle.trim()) return;
-
-        router.post(
-            route('sections.store', bookId),
-            { title: newTitle, parent_id: section.id },
-            {
-                onSuccess: () => {
-                    setNewTitle('');
-                    setIsAddingChild(false);
-                },
-            }
-        );
+        router.post(route('sections.store', bookId), { title: newTitle, parent_id: section.id }, {
+            onSuccess: () => {
+                setNewTitle('');
+                setShowInput(false);
+            },
+        });
     };
 
     const handleDelete = () => {
-        if (confirm('Delete this section and all its subsections?')) {
+        if (confirm('Delete this section and all subsections?')) {
             router.delete(route('sections.destroy', section.id));
         }
     };
 
     return (
-        <div style={{ paddingLeft: `${paddingLeft}px` }}>
+        <div style={{ marginLeft: `${level * 12}px` }}>
             <div
-                className={`group flex items-center rounded px-2 py-1 text-sm ${isSelected
-                        ? 'bg-indigo-100 text-indigo-800'
-                        : 'text-gray-700 hover:bg-gray-100'
+                className={`group flex items-center rounded px-2 py-1 text-sm ${isSelected ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-gray-100'
                     }`}
             >
-                <button
-                    type="button"
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="mr-1 h-4 w-4 flex-shrink-0 text-gray-400"
-                >
-                    {hasChildren ? (isExpanded ? '▼' : '▶') : '•'}
-                </button>
-                <button
-                    type="button"
-                    onClick={() => onSelectSection(section)}
-                    className="flex-1 truncate text-left"
-                >
+                {hasChildren ? (
+                    <button onClick={() => setExpanded(!expanded)} className="mr-1 text-gray-400">
+                        {expanded ? '▼' : '▶'}
+                    </button>
+                ) : (
+                    <span className="mr-1 w-3"></span>
+                )}
+                <button onClick={() => onSelect(section)} className="flex-1 text-left truncate">
                     {section.title}
                 </button>
                 {canManage && (
-                    <div className="hidden group-hover:flex">
-                        <button
-                            type="button"
-                            onClick={() => setIsAddingChild(true)}
-                            className="ml-1 text-xs text-indigo-600 hover:text-indigo-800"
-                            title="Add subsection"
-                        >
-                            +
-                        </button>
-                        <button
-                            type="button"
-                            onClick={handleDelete}
-                            className="ml-1 text-xs text-red-600 hover:text-red-800"
-                            title="Delete section"
-                        >
-                            ×
-                        </button>
+                    <div className="hidden space-x-1 group-hover:flex">
+                        <button onClick={() => setShowInput(!showInput)} className="text-indigo-500 text-xs">+</button>
+                        <button onClick={handleDelete} className="text-red-500 text-xs">×</button>
                     </div>
                 )}
             </div>
 
-            {isAddingChild && (
-                <form onSubmit={handleAddChild} className="ml-5 mt-1 flex">
+            {showInput && canManage && (
+                <form onSubmit={handleAddSubsection} className="ml-4 mt-1">
                     <input
                         type="text"
                         value={newTitle}
                         onChange={(e) => setNewTitle(e.target.value)}
-                        placeholder="Subsection title"
-                        className="flex-1 rounded-l border border-gray-300 px-2 py-1 text-sm"
+                        placeholder="Subsection name"
+                        className="w-full rounded border px-2 py-1 text-xs"
                         autoFocus
                     />
-                    <button
-                        type="submit"
-                        className="rounded-r bg-indigo-600 px-2 py-1 text-sm text-white hover:bg-indigo-700"
-                    >
-                        Add
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => setIsAddingChild(false)}
-                        className="ml-1 text-sm text-gray-500"
-                    >
-                        Cancel
-                    </button>
                 </form>
             )}
 
-            {isExpanded && hasChildren && (
-                <div className="mt-1">
+            {expanded && hasChildren && (
+                <div>
                     {section.all_subsections.map((child) => (
                         <SectionItem
                             key={child.id}
                             section={child}
                             bookId={bookId}
                             canManage={canManage}
-                            onSelectSection={onSelectSection}
-                            selectedSectionId={selectedSectionId}
-                            depth={depth + 1}
+                            onSelect={onSelect}
+                            selectedId={selectedId}
+                            level={level + 1}
                         />
                     ))}
                 </div>

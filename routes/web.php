@@ -44,6 +44,15 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/books/{book}/collaborators', [CollaboratorController::class, 'store'])->name('collaborators.store');
     Route::delete('/books/{book}/collaborators/{user}', [CollaboratorController::class, 'destroy'])->name('collaborators.destroy');
+
+    // Admin Routes
+    Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
+        Route::post('/users/{user}/toggle-admin', [\App\Http\Controllers\AdminController::class, 'toggleAdmin'])->name('users.toggle');
+        Route::post('/users/{user}/toggle-role', [\App\Http\Controllers\AdminController::class, 'toggleRole'])->name('users.toggle-role');
+        Route::delete('/users/{user}', [\App\Http\Controllers\AdminController::class, 'deleteUser'])->name('users.delete');
+        Route::delete('/books/{book}', [\App\Http\Controllers\AdminController::class, 'deleteBook'])->name('books.delete');
+    });
 });
 
 require __DIR__ . '/auth.php';

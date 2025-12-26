@@ -36,6 +36,14 @@ export default function AuthenticatedLayout({ header, children }) {
                                 >
                                     Books
                                 </NavLink>
+                                {user.is_admin && (
+                                    <NavLink
+                                        href={route('admin.dashboard')}
+                                        active={route().current('admin.*')}
+                                    >
+                                        Admin
+                                    </NavLink>
+                                )}
                             </div>
                         </div>
 
@@ -166,7 +174,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         </div>
                     </div>
                 </div>
-            </nav>
+            </nav >
 
             {header && (
                 <header className="bg-white shadow">
@@ -174,9 +182,10 @@ export default function AuthenticatedLayout({ header, children }) {
                         {header}
                     </div>
                 </header>
-            )}
+            )
+            }
 
             <main>{children}</main>
-        </div>
+        </div >
     );
 }

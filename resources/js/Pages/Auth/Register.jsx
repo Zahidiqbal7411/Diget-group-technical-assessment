@@ -11,6 +11,7 @@ export default function Register() {
         email: '',
         password: '',
         password_confirmation: '',
+        role: 'author',
     });
 
     const submit = (e) => {
@@ -88,6 +89,34 @@ export default function Register() {
                         required
                     />
                     <InputError message={errors.password_confirmation} className="mt-2" />
+                </div>
+
+                <div className="mt-4">
+                    <InputLabel value="I want to register as:" />
+                    <div className="mt-2 flex space-x-4">
+                        <label className="flex items-center">
+                            <input
+                                type="radio"
+                                name="role"
+                                value="author"
+                                checked={data.role === 'author'}
+                                onChange={(e) => setData('role', e.target.value)}
+                                className="text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="ml-2 text-sm text-gray-700 font-medium">Author</span>
+                        </label>
+                        <label className="flex items-center">
+                            <input
+                                type="radio"
+                                name="role"
+                                value="collaborator"
+                                checked={data.role === 'collaborator'}
+                                onChange={(e) => setData('role', e.target.value)}
+                                className="text-indigo-600 focus:ring-indigo-500"
+                            />
+                            <span className="ml-2 text-sm text-gray-700 font-medium">Collaborator</span>
+                        </label>
+                    </div>
                 </div>
 
                 <div className="mt-6">

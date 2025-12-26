@@ -36,11 +36,17 @@ class BookController extends Controller
 
     public function create(): Response
     {
+        if (Auth::user()->role !== 'author') {
+            abort(403, 'Only authors can create books.');
+        }
         return Inertia::render('Books/Create');
     }
 
     public function store(Request $request)
     {
+        if (Auth::user()->role !== 'author') {
+            abort(403, 'Only authors can create books.');
+        }
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',

@@ -1,59 +1,112 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Diget Group Technical Assessment
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Cloud-Based Notebook Collaboration Platform
 
-## About Laravel
+A next-generation cloud-based notebook collaboration platform built with Laravel 12, React, and Inertia.js.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- **Unlimited Sections & Subsections**: Infinite nesting with recursive structure
+- **User Authentication**: Secure login/registration via Laravel Breeze
+- **Role-Based Access Control**:
+  - **Authors**: Create sections, delete, manage collaborators
+  - **Collaborators**: Edit content only
+- **Real-time Collaboration**: Invite users to collaborate on books
+- **Caching**: Section trees cached for performance
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Technology Stack
 
-## Learning Laravel
+| Component | Technology |
+|-----------|------------|
+| Backend | Laravel 12 |
+| Frontend | React 18 |
+| SPA Layer | Inertia.js |
+| Database | SQLite |
+| Styling | Tailwind CSS |
+| Editor | TipTap |
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+# Clone the repository
+git clone <repository-url>
+cd Technical_assessment
 
-## Laravel Sponsors
+# Install dependencies
+composer install
+npm install
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# Setup environment
+cp .env.example .env
+php artisan key:generate
 
-### Premium Partners
+# Create SQLite database
+touch database/database.sqlite
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+# Run migrations
+php artisan migrate
 
-## Contributing
+# Build assets
+npm run build
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# Start servers
+php artisan serve
+npm run dev
+```
 
-## Code of Conduct
+## Database Schema
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Tables
 
-## Security Vulnerabilities
+**users**
+- id, name, email, password, timestamps
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**books**
+- id, user_id (author), title, description, timestamps
 
-## License
+**sections**
+- id, book_id, parent_id (nullable), title, content, order, timestamps
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**book_collaborators**
+- id, book_id, user_id, role, timestamps
+
+## API Routes
+
+| Method | Route | Description |
+|--------|-------|-------------|
+| GET | /books | List all books |
+| POST | /books | Create book |
+| GET | /books/{book}/edit | Open book editor |
+| PUT | /books/{book} | Update book |
+| DELETE | /books/{book} | Delete book |
+| POST | /books/{book}/sections | Create section |
+| PUT | /sections/{section} | Update section |
+| DELETE | /sections/{section} | Delete section |
+| POST | /books/{book}/collaborators | Add collaborator |
+| DELETE | /books/{book}/collaborators/{user} | Remove collaborator |
+
+## Architecture Decisions
+
+### 1. Recursive Sections (Adjacency List Pattern)
+Used `parent_id` self-referencing for infinite nesting. Simple and works well with Laravel's eager loading.
+
+### 2. Caching Strategy
+`Cache::remember` on section trees (1 hour TTL). Cache invalidated on any section CRUD operation.
+
+### 3. Authorization via Policies
+Laravel Policies (`BookPolicy`, `SectionPolicy`) enforce role-based access cleanly.
+
+### 4. Service Layer
+Business logic encapsulated in `BookService` and `SectionService` following OOP principles.
+
+## Testing the Collaboration Flow
+
+1. Register User A (Author)
+2. Create a book and add sections
+3. Register User B (Collaborator) in another browser
+4. User A: Click "Share" → Enter User B's email
+5. User B: See book in "Shared With Me", can edit content
+
+## Author
+
+Zahid Khan - Diget Group Technical Assessment
