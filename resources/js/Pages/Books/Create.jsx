@@ -21,7 +21,7 @@ export default function Create() {
             <Head title="Create Book" />
 
             <div className="py-6">
-                <div className="mx-auto max-w-md px-4">
+                <div className="mx-auto max-w-2xl px-4">
                     <div className="rounded-lg bg-white p-6 shadow-sm">
                         <form onSubmit={submit} className="space-y-4">
                             <div>
