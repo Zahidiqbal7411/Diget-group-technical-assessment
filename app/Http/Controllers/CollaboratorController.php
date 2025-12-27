@@ -9,9 +9,7 @@ use Illuminate\Http\Request;
 
 class CollaboratorController extends Controller
 {
-    public function __construct(protected BookService $bookService)
-    {
-    }
+    public function __construct(protected BookService $bookService) {}
 
     public function store(Request $request, Book $book)
     {

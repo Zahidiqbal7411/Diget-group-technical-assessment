@@ -4,8 +4,8 @@ export default function Welcome({ auth }) {
     return (
         <div className="min-h-screen bg-slate-50 selection:bg-indigo-100 selection:text-indigo-900">
             <Head title="Diget Group - Cloud Notebook Platform" />
-            
-            {/* Header / Navigation */}
+
+
             <header className="fixed top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md">
                 <nav className="mx-auto flex max-w-7xl items-center justify-between p-4 lg:px-8" aria-label="Global">
                     <div className="flex items-center gap-x-3">
@@ -16,7 +16,7 @@ export default function Welcome({ auth }) {
                         </div>
                         <span className="text-xl font-bold tracking-tight text-slate-900">Diget Group</span>
                     </div>
-                    
+
                     <div className="flex items-center gap-x-6">
                         {auth.user ? (
                             <Link
@@ -46,12 +46,11 @@ export default function Welcome({ auth }) {
             </header>
 
             <main>
-                {/* Hero Section */}
                 <section className="relative isolate pt-14 lg:pt-32">
                     <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
                         <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)' }}></div>
                     </div>
-                    
+
                     <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-10 lg:px-8">
                         <div className="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
                             <div className="flex">
@@ -87,15 +86,15 @@ export default function Welcome({ auth }) {
                         <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
                             <div className="relative mx-auto max-w-[500px] rounded-3xl bg-slate-900/5 p-2 ring-1 ring-inset ring-slate-900/10 lg:-mr-8 lg:max-w-none">
                                 <div className="rounded-2xl bg-white shadow-2xl ring-1 ring-slate-900/10 overflow-hidden">
-                                     <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center gap-x-2">
+                                    <div className="bg-slate-50 border-b border-slate-200 px-4 py-3 flex items-center gap-x-2">
                                         <div className="flex gap-x-1.5">
                                             <div className="h-3 w-3 rounded-full bg-red-400"></div>
                                             <div className="h-3 w-3 rounded-full bg-amber-400"></div>
                                             <div className="h-3 w-3 rounded-full bg-emerald-400"></div>
                                         </div>
                                         <div className="mx-auto text-xs font-medium text-slate-400">diget-cloud-notebook.app</div>
-                                     </div>
-                                     <div className="p-8 space-y-4">
+                                    </div>
+                                    <div className="p-8 space-y-4">
                                         <div className="h-4 w-3/4 rounded bg-slate-100"></div>
                                         <div className="h-4 w-1/2 rounded bg-slate-100"></div>
                                         <div className="h-20 w-full rounded bg-indigo-50"></div>
@@ -104,14 +103,13 @@ export default function Welcome({ auth }) {
                                             <div className="h-24 rounded bg-slate-50"></div>
                                             <div className="h-24 rounded bg-slate-50"></div>
                                         </div>
-                                     </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </section>
 
-                {/* Features Section */}
                 <section id="features" className="bg-white py-24 sm:py-32">
                     <div className="mx-auto max-w-7xl px-6 lg:px-8">
                         <div className="mx-auto max-w-2xl lg:text-center">
@@ -168,8 +166,7 @@ export default function Welcome({ auth }) {
                         </div>
                     </div>
                 </section>
-                
-                {/* Stats Section */}
+
                 <section className="bg-indigo-600 py-24 sm:py-32">
                     <div className="mx-auto max-w-7xl px-6 lg:px-8">
                         <div className="grid grid-cols-1 gap-y-16 text-center lg:grid-cols-3">
@@ -189,7 +186,6 @@ export default function Welcome({ auth }) {
                     </div>
                 </section>
 
-                {/* CTA Section */}
                 <section className="bg-white">
                     <div className="mx-auto max-w-7xl py-24 sm:px-6 sm:py-32 lg:px-8">
                         <div className="relative isolate overflow-hidden bg-slate-900 px-6 pt-16 shadow-2xl sm:rounded-3xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:pt-0">
@@ -238,7 +234,7 @@ export default function Welcome({ auth }) {
             <footer className="bg-white border-t border-slate-200">
                 <div className="mx-auto max-w-7xl px-6 py-12 md:flex md:items-center md:justify-between lg:px-8">
                     <div className="flex justify-center space-x-6 md:order-2">
-                         <span className="text-xs text-slate-400">Diget Group Tech Assessment</span>
+                        <span className="text-xs text-slate-400">Diget Group Tech Assessment</span>
                     </div>
                     <div className="mt-8 md:order-1 md:mt-0">
                         <p className="text-center text-xs leading-5 text-slate-500">

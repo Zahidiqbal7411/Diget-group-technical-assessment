@@ -11,9 +11,7 @@ use Illuminate\Support\Facades\Gate;
 
 class SectionController extends Controller
 {
-    public function __construct(protected SectionService $sectionService)
-    {
-    }
+    public function __construct(protected SectionService $sectionService) {}
 
     public function store(Request $request, Book $book)
     {

@@ -24,8 +24,34 @@ A next-generation cloud-based notebook collaboration platform built with Laravel
 | Database | SQLite |
 | Styling | Tailwind CSS |
 | Editor | TipTap |
+| Standards | PSR-12 (via Laravel Pint) |
 
 ## Installation
+
+### Quick Start (Official Laravel + React Setup)
+
+1. **Create & Setup Project**
+   ```bash
+   composer create-project laravel/technical_assessment
+   cd technical_assessment
+   composer require laravel/breeze --dev
+   php artisan breeze:install react
+   ```
+
+2. **Install & Build**
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+3. **Database & Serve**
+   - Configure your database in `.env`
+   - Run migrations: `php artisan migrate`
+   - Start backend: `php artisan serve`
+
+This setup provides Laravel, React, Vite, Tailwind CSS, and authentication ready out of the box.
+
+### Standard Installation
 
 ```bash
 # Clone the repository

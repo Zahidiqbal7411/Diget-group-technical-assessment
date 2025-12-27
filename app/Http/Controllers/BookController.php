@@ -15,8 +15,7 @@ class BookController extends Controller
     public function __construct(
         protected BookService $bookService,
         protected SectionService $sectionService
-    ) {
-    }
+    ) {}
 
     public function index(): Response
     {
@@ -28,11 +27,12 @@ class BookController extends Controller
         $booksWithOwnership = $books->map(function ($book) use ($user) {
             $book->is_owner = $book->user_id === $user->id;
             $book->collaborators_count = $book->collaborators->count();
+
             return $book;
         });
 
-        if (!$isAuthor) {
-            $booksWithOwnership = $booksWithOwnership->filter(fn($b) => !$b->is_owner)->values();
+        if (! $isAuthor) {
+            $booksWithOwnership = $booksWithOwnership->filter(fn ($b) => ! $b->is_owner)->values();
         }
 
         return Inertia::render('Books/Index', [
@@ -43,6 +43,7 @@ class BookController extends Controller
     public function create(): Response
     {
         $this->authorize('create', Book::class);
+
         return Inertia::render('Books/Create');
     }
 

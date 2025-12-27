@@ -17,7 +17,7 @@ class BookService
 
     public function addCollaborator(Book $book, User $user): void
     {
-        if (!$book->isAuthor($user) && !$book->isCollaborator($user)) {
+        if (! $book->isAuthor($user) && ! $book->isCollaborator($user)) {
             $book->collaborators()->attach($user->id, ['role' => 'collaborator']);
         }
     }

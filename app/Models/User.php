@@ -50,7 +50,6 @@ class User extends Authenticatable
     public function allAccessibleBooks()
     {
         return Book::where('user_id', $this->id)
-            ->orWhereHas('collaborators', fn($query) => $query->where('user_id', $this->id));
+            ->orWhereHas('collaborators', fn ($query) => $query->where('user_id', $this->id));
     }
 }
-

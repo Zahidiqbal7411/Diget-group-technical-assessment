@@ -99,7 +99,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/books/{book}/collaborators', [CollaboratorController::class, 'store'])->name('collaborators.store');
     Route::delete('/books/{book}/collaborators/{user}', [CollaboratorController::class, 'destroy'])->name('collaborators.destroy');
 
-    // Admin Routes
     Route::middleware(['admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
         Route::post('/users/{user}/toggle-admin', [\App\Http\Controllers\AdminController::class, 'toggleAdmin'])->name('users.toggle');
@@ -109,5 +108,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-require __DIR__ . '/auth.php';
-
+require __DIR__.'/auth.php';

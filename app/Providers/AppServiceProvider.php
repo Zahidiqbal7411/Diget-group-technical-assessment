@@ -12,9 +12,7 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-    }
+    public function register(): void {}
 
     public function boot(): void
     {
@@ -24,4 +22,3 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Section::class, SectionPolicy::class);
     }
 }
-
