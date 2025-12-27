@@ -9,7 +9,10 @@ class BookService
 {
     public function createBook(User $user, array $data): Book
     {
-        return $user->books()->create($data);
+        return $user->books()->create([
+            ...$data,
+            'last_editor_id' => $user->id,
+        ]);
     }
 
     public function addCollaborator(Book $book, User $user): void

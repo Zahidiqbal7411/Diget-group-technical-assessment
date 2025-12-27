@@ -36,19 +36,23 @@ export default function Index({ books }) {
 
             <div className="py-6">
                 <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-                    {books.length === 0 ? (
+                    {ownedBooks.length === 0 && sharedBooks.length === 0 ? (
                         <div className="rounded-lg bg-white p-8 text-center shadow-sm">
-                            <p className="mb-4 text-gray-500">You don't have any books yet</p>
-                            <Link
-                                href={route('books.create')}
-                                className="rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
-                            >
-                                Create Your First Book
-                            </Link>
+                            <p className="mb-4 text-gray-500">
+                                {isAuthor ? "You don't have any books yet" : "No books have been shared with you yet"}
+                            </p>
+                            {isAuthor && (
+                                <Link
+                                    href={route('books.create')}
+                                    className="rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
+                                >
+                                    Create Your First Book
+                                </Link>
+                            )}
                         </div>
                     ) : (
                         <div className="space-y-6">
-                            {ownedBooks.length > 0 && (
+                            {isAuthor && ownedBooks.length > 0 && (
                                 <div>
                                     <h3 className="mb-3 font-semibold text-gray-700">My Books ({ownedBooks.length})</h3>
                                     <div className="space-y-2">
@@ -57,8 +61,10 @@ export default function Index({ books }) {
                                                 <div>
                                                     <p className="font-medium text-gray-900">{book.title}</p>
                                                     <p className="text-sm text-gray-500">{book.description || 'No description'}</p>
-                                                    {book.collaborators_count > 0 && (
-                                                        <p className="text-xs text-indigo-600">{book.collaborators_count} collaborator(s)</p>
+                                                    {book.collaborators?.length > 0 && (
+                                                        <p className="text-xs text-indigo-600">
+                                                            Collaborators: {book.collaborators.map(c => c.name).join(', ')}
+                                                        </p>
                                                     )}
                                                 </div>
                                                 <div className="flex space-x-2">
@@ -66,7 +72,7 @@ export default function Index({ books }) {
                                                         href={route('books.edit', book.id)}
                                                         className="rounded bg-indigo-100 px-3 py-1 text-sm text-indigo-700 hover:bg-indigo-200"
                                                     >
-                                                        Open
+                                                        Edit
                                                     </Link>
                                                     <button
                                                         onClick={() => handleDelete(book.id)}
@@ -81,7 +87,7 @@ export default function Index({ books }) {
                                 </div>
                             )}
 
-                            {sharedBooks.length > 0 && (
+                            {!isAuthor && sharedBooks.length > 0 && (
                                 <div>
                                     <h3 className="mb-3 font-semibold text-gray-700">Shared With Me ({sharedBooks.length})</h3>
                                     <div className="space-y-2">
@@ -89,13 +95,14 @@ export default function Index({ books }) {
                                             <div key={book.id} className="flex items-center justify-between rounded-lg bg-white p-4 shadow-sm">
                                                 <div>
                                                     <p className="font-medium text-gray-900">{book.title}</p>
-                                                    <p className="text-sm text-gray-500">By {book.author?.name}</p>
+                                                    <p className="text-sm text-gray-500">{book.description || 'No description'}</p>
+                                                    <p className="text-xs text-indigo-600">Author: {book.author?.name}</p>
                                                 </div>
                                                 <Link
                                                     href={route('books.edit', book.id)}
                                                     className="rounded bg-indigo-100 px-3 py-1 text-sm text-indigo-700 hover:bg-indigo-200"
                                                 >
-                                                    Open
+                                                    Edit
                                                 </Link>
                                             </div>
                                         ))}

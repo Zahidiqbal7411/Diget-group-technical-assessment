@@ -21,13 +21,19 @@ class BookController extends Controller
     public function index(): Response
     {
         $user = Auth::user();
+        $isAuthor = $user->role === 'author';
         $books = $this->bookService->getAccessibleBooks($user);
+        $books->load('collaborators', 'author');
 
         $booksWithOwnership = $books->map(function ($book) use ($user) {
             $book->is_owner = $book->user_id === $user->id;
-            $book->collaborators_count = $book->collaborators()->count();
+            $book->collaborators_count = $book->collaborators->count();
             return $book;
         });
+
+        if (!$isAuthor) {
+            $booksWithOwnership = $booksWithOwnership->filter(fn($b) => !$b->is_owner)->values();
+        }
 
         return Inertia::render('Books/Index', [
             'books' => $booksWithOwnership,
@@ -36,17 +42,14 @@ class BookController extends Controller
 
     public function create(): Response
     {
-        if (Auth::user()->role !== 'author') {
-            abort(403, 'Only authors can create books.');
-        }
+        $this->authorize('create', Book::class);
         return Inertia::render('Books/Create');
     }
 
     public function store(Request $request)
     {
-        if (Auth::user()->role !== 'author') {
-            abort(403, 'Only authors can create books.');
-        }
+        $this->authorize('create', Book::class);
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -79,6 +82,8 @@ class BookController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
         ]);
+
+        $validated['last_editor_id'] = Auth::id();
 
         $book->update($validated);
 

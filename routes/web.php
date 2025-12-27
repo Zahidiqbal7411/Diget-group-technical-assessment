@@ -20,14 +20,68 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     $user = Auth::user();
-    $ownedBooks = $user->books()->with('author')->latest()->take(5)->get();
+    $isAuthor = $user->role === 'author';
+
+    $ownedBooks = $isAuthor
+        ? $user->books()->with(['author', 'collaborators'])->latest()->take(5)->get()
+        : collect();
+
     $sharedBooks = $user->collaboratedBooks()->with('author')->latest()->take(5)->get();
 
+    $collaboratorActivity = collect();
+    if ($isAuthor) {
+        $bookIds = $user->books()->pluck('id');
+
+        $sectionUpdates = \App\Models\Section::whereIn('book_id', $bookIds)
+            ->whereNotNull('last_editor_id')
+            ->where('last_editor_id', '!=', $user->id)
+            ->with(['lastEditor', 'book'])
+            ->latest('updated_at')
+            ->take(5)
+            ->get()
+            ->map(function ($section) {
+                return [
+                    'type' => 'section',
+                    'id' => $section->id,
+                    'book_id' => $section->book_id,
+                    'title' => $section->title,
+                    'book_title' => $section->book->title,
+                    'editor_name' => $section->lastEditor->name,
+                    'updated_at' => $section->updated_at->diffForHumans(),
+                ];
+            });
+
+        $bookUpdates = \App\Models\Book::whereIn('id', $bookIds)
+            ->whereNotNull('last_editor_id')
+            ->where('last_editor_id', '!=', $user->id)
+            ->with('lastEditor')
+            ->latest('updated_at')
+            ->take(5)
+            ->get()
+            ->map(function ($book) {
+                return [
+                    'type' => 'book',
+                    'id' => $book->id,
+                    'book_id' => $book->id,
+                    'title' => $book->title,
+                    'book_title' => $book->title,
+                    'editor_name' => $book->lastEditor->name,
+                    'updated_at' => $book->updated_at->diffForHumans(),
+                ];
+            });
+
+        $collaboratorActivity = $sectionUpdates->concat($bookUpdates)
+            ->sortByDesc('updated_at')
+            ->take(5)
+            ->values();
+    }
+
     return Inertia::render('Dashboard', [
-        'ownedBooksCount' => $user->books()->count(),
+        'ownedBooksCount' => $isAuthor ? $user->books()->count() : 0,
         'sharedBooksCount' => $user->collaboratedBooks()->count(),
         'recentOwnedBooks' => $ownedBooks,
         'recentSharedBooks' => $sharedBooks,
+        'collaboratorActivity' => $collaboratorActivity,
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 

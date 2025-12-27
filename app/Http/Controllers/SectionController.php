@@ -32,6 +32,7 @@ class SectionController extends Controller
         $book->sections()->create([
             ...$validated,
             'order' => $maxOrder + 1,
+            'last_editor_id' => Auth::id(),
         ]);
 
         $this->sectionService->clearCache($book);
@@ -47,6 +48,8 @@ class SectionController extends Controller
             'title' => 'sometimes|required|string|max:255',
             'content' => 'nullable|string',
         ]);
+
+        $validated['last_editor_id'] = Auth::id();
 
         $section->update($validated);
 

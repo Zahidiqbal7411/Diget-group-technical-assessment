@@ -19,12 +19,12 @@ class BookPolicy
 
     public function create(User $user): bool
     {
-        return true;
+        return $user->role === 'author';
     }
 
     public function update(User $user, Book $book): bool
     {
-        return $book->isAuthor($user);
+        return $book->hasAccess($user);
     }
 
     public function delete(User $user, Book $book): bool

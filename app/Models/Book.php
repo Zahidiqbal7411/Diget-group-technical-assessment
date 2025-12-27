@@ -16,11 +16,17 @@ class Book extends Model
         'user_id',
         'title',
         'description',
+        'last_editor_id',
     ];
 
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function lastEditor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'last_editor_id');
     }
 
     public function sections(): HasMany

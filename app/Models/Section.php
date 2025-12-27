@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\User; // Added this line
 
 class Section extends Model
 {
@@ -17,7 +18,13 @@ class Section extends Model
         'title',
         'content',
         'order',
+        'last_editor_id', // Added this line
     ];
+
+    public function lastEditor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'last_editor_id');
+    }
 
     public function book(): BelongsTo
     {
