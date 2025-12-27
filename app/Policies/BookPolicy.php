@@ -24,7 +24,7 @@ class BookPolicy
 
     public function update(User $user, Book $book): bool
     {
-        return $book->hasAccess($user);
+        return $book->isAuthor($user);
     }
 
     public function delete(User $user, Book $book): bool

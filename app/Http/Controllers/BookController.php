@@ -59,13 +59,14 @@ class BookController extends Controller
 
     public function edit(Book $book): Response
     {
-        $this->authorize('update', $book);
+        $this->authorize('view', $book);
 
         $sections = $this->sectionService->getSectionTree($book);
 
         return Inertia::render('Books/Editor', [
             'book' => $book->load('author', 'collaborators'),
             'sections' => $sections,
+            'canEdit' => $book->hasAccess(Auth::user()),
             'canManage' => $book->isAuthor(Auth::user()),
         ]);
     }

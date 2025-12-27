@@ -3,7 +3,7 @@ import { Head, useForm, router, Link } from '@inertiajs/react';
 import SectionTree from '@/Components/SectionTree';
 import RichTextEditor from '@/Components/RichTextEditor';
 
-export default function Editor({ book, sections, canManage }) {
+export default function Editor({ book, sections, canEdit, canManage }) {
     const [selectedSection, setSelectedSection] = useState(null);
     const [newSectionTitle, setNewSectionTitle] = useState('');
     const [showShare, setShowShare] = useState(false);
@@ -14,6 +14,10 @@ export default function Editor({ book, sections, canManage }) {
     });
 
     const collaboratorForm = useForm({ email: '' });
+    const bookTitleForm = useForm({
+        title: book.title,
+    });
+    const [isRenamingBook, setIsRenamingBook] = useState(false);
 
     const handleSelectSection = (section) => {
         setSelectedSection(section);
@@ -46,6 +50,13 @@ export default function Editor({ book, sections, canManage }) {
         }
     };
 
+    const handleUpdateBookTitle = (e) => {
+        e.preventDefault();
+        bookTitleForm.put(route('books.update', book.id), {
+            onSuccess: () => setIsRenamingBook(false),
+        });
+    };
+
     return (
         <div className="flex h-screen flex-col bg-gray-50">
             <Head title={book.title} />
@@ -55,7 +66,30 @@ export default function Editor({ book, sections, canManage }) {
                     <Link href={route('books.index')} className="text-gray-500 hover:text-gray-700">
                         ← Back
                     </Link>
-                    <span className="font-semibold text-gray-800">{book.title}</span>
+                    {isRenamingBook ? (
+                        <form onSubmit={handleUpdateBookTitle} className="flex items-center space-x-2">
+                            <input
+                                type="text"
+                                value={bookTitleForm.data.title}
+                                onChange={(e) => bookTitleForm.setData('title', e.target.value)}
+                                className="h-7 rounded border px-2 py-0.5 text-sm font-semibold"
+                                autoFocus
+                            />
+                            <button type="submit" className="text-xs text-indigo-600 font-bold">Save</button>
+                            <button type="button" onClick={() => setIsRenamingBook(false)} className="text-xs text-gray-500">Cancel</button>
+                        </form>
+                    ) : (
+                        <div className="flex items-center space-x-2">
+                            <span className="font-semibold text-gray-800">{book.title}</span>
+                            {canManage && (
+                                <button onClick={() => setIsRenamingBook(true)} className="text-gray-400 hover:text-gray-600">
+                                    <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                    </svg>
+                                </button>
+                            )}
+                        </div>
+                    )}
                     <span className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
                         {canManage ? 'Author' : 'Collaborator'}
                     </span>
